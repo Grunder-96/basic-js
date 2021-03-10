@@ -1,6 +1,64 @@
 const CustomError = require("../extensions/custom-error");
 
-module.exports = function getSeason(/* date */) {
-  throw new CustomError('Not implemented');
-  // remove line with error and write your code here
+module.exports = function getSeason(date) {
+  let month = date.getMonth();
+if (!date)  {
+  return `Unable to determine the time of year!`; }
+
+// if (date == '')  {
+//   return 'Error'; }
+
+function search (a){
+  if (a <= 1 || a == 11) return 'winter';
+  if (a <=4) return 'spring';
+  if (a <=7) return 'summer';
+  if (a <=10) return 'autumn';
+
+}
+
+return search(month);
+
 };
+
+
+// const CustomError = require("../extensions/custom-error");
+
+// module.exports = function getSeason(date) {
+
+//   if (!date) { // если в аргумент передано пустое значение
+//     return 'Unable to determine the time of year!';
+//   } else if (!(date instanceof Date)) { // если data не имеет тип Object и граничные случаи объекта Date
+//     throw Error('Error');
+//   } else if (Object.prototype.toString.call(date) !== '[object Date]') { // если переданный арг-т не явл. объектом new Date
+//     throw new Error('THROWN');
+//   }
+
+//   let month = date.getMonth();
+
+//   switch (String(month + 1)) {
+//     case '12':
+//     case '1':
+//     case '2':
+//       console.log('winter');
+//       return 'winter';
+//     case '3':
+//     case '4':
+//     case '5':
+//       console.log('spring');
+//       return 'spring';
+//     case '6':
+//     case '7':
+//     case '8':
+//       console.log('summer');
+//       return 'summer';
+//     case '9':
+//     case '10':
+//     case '11':
+//       console.log('autumn');
+//       return 'autumn';
+//     default:
+//       throw new Error('Error');
+//   }
+// };
+
+

@@ -2,45 +2,24 @@ const CustomError = require("../extensions/custom-error");
 
 module.exports = function transform(arr) {
  if (Array.isArray(arr) === false)  throw  new Error('');
- m = arr.map(function(currentValue, index, array){
+ let result = [];
+ for (let i = 0; i < arr.length; i++) {
+ if (arr[i] == '--discard-prev' && i == 0 || `--double-prev` && i == 0) {continue} else
+ if (arr[i] == '--discard-next' || `--double-next` && i == arr.length - 1) {continue} else
+ if(arr[i] == '--discard-next' &&  arr[i + 2] == '--discard-prev' || '--double-prev') {i +=2} else
+ if (arr[i] == '--double-next') {result.push(arr[i + 1])} else
+ if (arr[i] == '--double-prev') {result.push(arr[i - 1])} else result.push(arr[i])
+ } 
+ return result;
+}
 
-  if (currentValue == "--discard-next" && typeof(array[index + 1]) !== "undefined") {
-    array[index] = "delete";
-    array[index + 1] = "delete";
-  }
 
-  if (array[0] == "--discard-prev" || array[0] == "--double-prev") {
-    array[index] = "delete";
-  }
- 
-  if (array[index + 1] == "--discard-prev") {
-    currentValue = "delete";
-    array[index + 1] = "delete";
-  }
-  
-  if (currentValue == "--double-next" && typeof(array[index + 1]) == "undefined") {
-    currentValue = "delete";
-  }
 
-  if (currentValue == "--double-next" && array[index + 1] !== "undefined") {
-    currentValue = array[index + 1];
-  } 
-  
-  if (array[index + 1] == "--double-prev" && typeof(currentValue) !== "undefined") {
-    array[index + 1] = array[index];
-  }
+//  * `--discard-next` исключает следующий за ней элемент исходного массива из преобразованного массива.
+// * `--discard-prev` исключает предшествующий ей элемент исходного массива из преобразованного массива.
+// * `--double-next` удваивает следующий за ней элемент исходного массива в преобразованном массиве.
+// * `--double-prev` удваивает предшествующий ей элемент исходного массива в преобразованном массиве.
 
-  if (array[index + 1] == "--double-prev" && typeof(currentValue) == "undefined" || currentValue == "delete") {
-    array[index + 1] = "delete";
-  }
-  return currentValue;
-});
+// `transform([1, 2, 3, '--double-next', 4, 5])` => `[1, 2, 3, 4, 4, 5]`
 
-return m.filter(element => element !== "delete");
-
-};
-
-// console.log(module.exports([1, 2, 3, '--discard-next', 1337, '--double-prev', 4, 5]));
-
-// let a = [1, 2, 3, '--double-next', 1337, '--discard-prev', 4, 5];
-// console.log(module.exports[7])
+// `transform([1, 2, 3, '--discard-prev', 4, 5])` => `[1, 2, 4, 5]`
